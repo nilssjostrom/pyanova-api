@@ -13,7 +13,7 @@ Fix:
   
 2. I had a similar problem with motor-control.
 
-3. I made device_state publicly available as in: cooker.device_state (a shorthand to get complete info on state)
+3. I made raw_device_state publicly available as in: cooker.raw_device_state (a shorthand to get complete info on state), as well as a polished version in cooker.device_state, and a few other properties such as cooker.job_end_time and job_start_time
  
 # pyanova-api
 A Python 3 library for programmatically accessing WiFi-enabled Anova sous vide cookers through the Anova API.
@@ -97,7 +97,10 @@ All the available state variables are:
 | Variable | Type | Description |
 | --- | --- | --- |
 | `job_status` | str | The status of the current job, for example, `PREHEATING`. |
-| `job_time_remaining` | int | The number of seconds remaining in the job. |
+| `job_seconds_remaining` | int | The number of seconds remaining in the job. |
+| `job_time_remaining` | str | Time remaining in hh:mm:ss format. |
+| `cook_time_seconds` | int | The number of seconds in the job (the number given as input to the job, so the whole running time from start to end). |
+| `cook_time` | str | same as cook_time_seconds but in hh:mm:ss format. |
 | `heater_duty_cycle` | float | The heater's percentage duty cycle (or None, if not available). |
 | `motor_duty_cycle` | float | The motor's percentage duty cycle (or None, if not available). |
 | `wifi_connected` | bool | The cooker's WiFi connection status. |
@@ -109,7 +112,10 @@ All the available state variables are:
 | `heater_temp` | float | The heater's temperature in Celcius. |
 | `triac_temp` | float | The triac's (like a relay) temperature in Celcius. |
 | `water_temp` | float | The water's temperature in Celcius. |
-| `device_state` | dict | The complete state of the device, including all info above |
+| `job_end_time` | str | calculated job_end_time in "%Y-%m-%d %H:%M:%S" format |
+| `job_start_time` | str | calculated job_start_time in "%Y-%m-%d %H:%M:%S" format  |
+| `raw_device_state` | dict | The complete state of the device, including all info above |
+| `device_state` | dict | A polished human readable state of the device |
 
 
 These state variables can be accessed like so:
