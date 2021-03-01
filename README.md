@@ -2,6 +2,7 @@
  https://github.com/ammarzuberi/pyanova-api.git
  
 # what did I change?
+1. heater-control
 float(device_state.get('heater-control').get('duty-cycle')) 
  failed on my device because:
  device_state.get('heater-control') regularly returns None >>> None.get() always raises an error.
