@@ -112,8 +112,8 @@ All the available state variables are:
 | `heater_temp` | float | The heater's temperature in Celcius. |
 | `triac_temp` | float | The triac's (like a relay) temperature in Celcius. |
 | `water_temp` | float | The water's temperature in Celcius. |
-| `job_end_time` | str | calculated job_end_time in "%Y-%m-%d %H:%M:%S" format |
-| `job_start_time` | str | calculated job_start_time in "%Y-%m-%d %H:%M:%S" format  |
+| `job_end_time` | str | calculated job_end_time in "%Y-%m-%d %H:%M" format - very approx |
+| `job_start_time` | str | calculated job_start_time in "%Y-%m-%d %H:%M" format  - very approx  |
 | `raw_device_state` | dict | The complete state of the device, including all info above |
 | `device_state` | dict | A polished human readable state of the device |
 
