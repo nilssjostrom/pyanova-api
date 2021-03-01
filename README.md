@@ -18,10 +18,11 @@ A Python 3 library for programmatically accessing WiFi-enabled Anova sous vide c
 ## Installation
 `pyanova-api` can be installed from either PyPi or can be installed manually by cloning the GitHub repository.
 
-### TL;DR installation
+### TL;DR installation Not Available:
+This won't work as it would instead install the original copy from ammarzuberi : I don't have a copy of this project on pypi.org and don't intend to put one there (nothing ideologic, just lazy)
 ```pip install pyanova-api```
 
-### Manual installation
+### Manual installation works:
 First, clone the GitHub repository:
 ```git clone https://github.com/fabriba/pyanova-api.git```
 
