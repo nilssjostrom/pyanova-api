@@ -64,8 +64,8 @@ class AnovaCooker(object):
 		self.job_seconds_remaining = int(self.raw_device_state.get('job-status').get('cook-time-remaining')) 	# original ammarzuberi way
 		_job_time_remaining_delta = datetime.timedelta(seconds=self.job_seconds_remaining)  				# fabriba human readable way
 		self.job_time_remaining = str(_job_time_remaining_delta )				
-		self.job_end_time = (datetime.datetime.now() + _job_time_remaining_delta ).strftime("%Y-%m-%d %H:%M:%S")
-		self.job_start_time = (datetime.datetime.now() + _job_time_remaining_delta  - _cook_time_delta ).strftime("%Y-%m-%d %H:%M:%S")
+		self.job_end_time = (datetime.datetime.now() + _job_time_remaining_delta ).strftime("%Y-%m-%d %H:%M")
+		self.job_start_time = (datetime.datetime.now() + _job_time_remaining_delta  - _cook_time_delta ).strftime("%Y-%m-%d %H:%M")
 
 		self.heater_duty_cycle = float(self.raw_device_state.get('heater-control').get('duty-cycle')) if self.raw_device_state.get('heater-control') else None
 		self.motor_duty_cycle = float(self.raw_device_state.get('motor-control').get('duty-cycle')) if self.raw_device_state.get('motor-control') else None
