@@ -1,6 +1,7 @@
 import requests
 import random
 import string
+import datetime
 
 
 class AnovaCooker(object):
@@ -13,7 +14,7 @@ class AnovaCooker(object):
 		#---------------------------------------------
 		# States that can be changed via the API
 		#---------------------------------------------
-		self.cook_time = None # Int (seconds)
+		self.cook_time_seconds = None # Int (seconds)
 		self.cook = None # Boolean
 		self.target_temp = None # Float
 		self.temp_display_unit = None # String ('C' for Celcius or 'F' for Farenheit)
@@ -50,30 +51,56 @@ class AnovaCooker(object):
 
 	def update_state(self):
 		"""Get the device state and update local variables."""
-		self.device_state = self.__get_raw_state()
+		self.raw_device_state = self.__get_raw_state()
 
-		self.cook_time = int(self.device_state.get('job').get('cook-time-seconds'))
-		self.cook = False if self.device_state.get('job').get('mode') == 'IDLE' else True
-		self.target_temp = float(self.device_state.get('job').get('target-temperature'))
-		self.temp_display_unit = str(self.device_state.get('job').get('temperature-unit'))
+		self.cook_time_seconds = int(self.raw_device_state.get('job').get('cook-time-seconds'))
+		_cook_time_delta = datetime.timedelta(seconds=self.cook_time_seconds )
+		self.cook_time = str( _cook_time_delta )
+		self.cook = False if self.raw_device_state.get('job').get('mode') == 'IDLE' else True
+		self.target_temp = float(self.raw_device_state.get('job').get('target-temperature'))
+		self.temp_display_unit = str(self.raw_device_state.get('job').get('temperature-unit'))
 
-		self.job_status = str(self.device_state.get('job-status').get('state'))
-		self.job_time_remaining = int(self.device_state.get('job-status').get('cook-time-remaining'))
+		self.job_status = str(self.raw_device_state.get('job-status').get('state'))
+		self.job_seconds_remaining = int(self.raw_device_state.get('job-status').get('cook-time-remaining')) 	# original ammarzuberi way
+		_job_time_remaining_delta = datetime.timedelta(seconds=self.job_seconds_remaining)  				# fabriba human readable way
+		self.job_time_remaining = str(_job_time_remaining_delta )				
+		self.job_end_time = (datetime.datetime.now() + _job_time_remaining_delta ).strftime("%Y-%m-%d %H:%M:%S")
+		self.job_start_time = (datetime.datetime.now() + _job_time_remaining_delta  - _cook_time_delta ).strftime("%Y-%m-%d %H:%M:%S")
 
-		self.heater_duty_cycle = float(self.device_state.get('heater-control').get('duty-cycle')) if self.device_state.get('heater-control') else None
-		self.motor_duty_cycle = float(self.device_state.get('motor-control').get('duty-cycle')) if self.device_state.get('motor-control') else None
+		self.heater_duty_cycle = float(self.raw_device_state.get('heater-control').get('duty-cycle')) if self.raw_device_state.get('heater-control') else None
+		self.motor_duty_cycle = float(self.raw_device_state.get('motor-control').get('duty-cycle')) if self.raw_device_state.get('motor-control') else None
 
-		self.wifi_connected = True if self.device_state.get('network-info').get('connection-status') == 'connected-station' else False
-		self.wifi_ssid = str(self.device_state.get('network-info').get('ssid'))
+		self.wifi_connected = True if self.raw_device_state.get('network-info').get('connection-status') == 'connected-station' else False
+		self.wifi_ssid = str(self.raw_device_state.get('network-info').get('ssid'))
 
-		self.device_safe = bool(self.device_state.get('pin-info').get('device-safe'))
-		self.water_leak = bool(self.device_state.get('pin-info').get('water-leak'))
-		self.water_level_critical = bool(self.device_state.get('pin-info').get('water-level-critical'))
-		self.water_level_low = bool(self.device_state.get('pin-info').get('water-level-low'))
+		self.device_safe = bool(self.raw_device_state.get('pin-info').get('device-safe'))
+		self.water_leak = bool(self.raw_device_state.get('pin-info').get('water-leak'))
+		self.water_level_critical = bool(self.raw_device_state.get('pin-info').get('water-level-critical'))
+		self.water_level_low = bool(self.raw_device_state.get('pin-info').get('water-level-low'))
 
-		self.heater_temp = float(self.device_state.get('temperature-info').get('heater-temperature'))
-		self.triac_temp = float(self.device_state.get('temperature-info').get('triac-temperature'))
-		self.water_temp = float(self.device_state.get('temperature-info').get('water-temperature'))
+		self.heater_temp = float(self.raw_device_state.get('temperature-info').get('heater-temperature'))
+		self.triac_temp = float(self.raw_device_state.get('temperature-info').get('triac-temperature'))
+		self.water_temp = float(self.raw_device_state.get('temperature-info').get('water-temperature'))
+
+		self.device_state = {	'job': {		'cooking-time-hhmmss': self.cook_time ,
+												'mode': self.raw_device_state['job']['mode'],
+												'target-temperature': self.target_temp ,
+												'cook-start-time': self.job_start_time ,
+												'cook-end-time': self.job_end_time },
+								'job-status': {	'cook-time-remaining': self.job_time_remaining ,
+												'state': self.raw_device_state.get('job-status').get('state'),
+												'heater-temperature': self.heater_temp,
+												'water-temperature': self.water_temp ,
+												'device-safe': self.device_safe,
+												'water-leak': self.water_leak,
+												'water-level-critical': self.water_level_critical,
+												'water-temp-too-high': bool(self.raw_device_state.get('pin-info').get('water-temp-too-high')) },
+								'system-info': {'connection-status':  self.raw_device_state.get('network-info').get('connected-station') ,
+												'ssid': self.raw_device_state.get('network-info').get('ssid'),
+												'firmware-version': self.raw_device_state.get('system-info-3220').get('firmware-version'),
+												'firmware-version-raw': self.raw_device_state.get('system-info-3220').get('firmware-version-raw'),
+												'triac-temperature':self.triac_temp }
+							}
 
 
 	def __get_raw_state(self):
@@ -132,7 +159,7 @@ class AnovaCooker(object):
 			raise Exception('Invalid temperature unit - only F or C are supported')
 
 		# Validate cook time and target temperature
-		if type(self.cook_time) != int or type(self.target_temp) != float:
+		if type(self.cook_time_seconds) != int or type(self.target_temp) != float:
 			raise Exception('Invalid cook time or target temperature')
 
 		# Now prepare and send the request
@@ -141,7 +168,7 @@ class AnovaCooker(object):
 		}
 
 		anova_req_data = {
-			'cook-time-seconds': self.cook_time,
+			'cook-time-seconds': self.cook_time_seconds,
 			'id': ''.join(random.choices(string.ascii_lowercase + string.digits, k = 22)), # 22 digit random job ID for a new job at every save
 			'mode': cook_converted,
 			'ota-url': '',
