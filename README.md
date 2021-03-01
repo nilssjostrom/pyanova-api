@@ -8,6 +8,8 @@ float(device_state.get('heater-control').get('duty-cycle'))
 Fix:  
   float(device_state.get('heater-control').get('duty-cycle'))  if device_state.get('heater-control') else None
   
+I had a similar problem with motor-control.
+
 I couldn't find a way to branch this, so I forked it
  
 # pyanova-api
