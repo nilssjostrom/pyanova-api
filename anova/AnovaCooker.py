@@ -50,30 +50,30 @@ class AnovaCooker(object):
 
 	def update_state(self):
 		"""Get the device state and update local variables."""
-		device_state = self.__get_raw_state()
+		self.device_state = self.__get_raw_state()
 
-		self.cook_time = int(device_state.get('job').get('cook-time-seconds'))
-		self.cook = False if device_state.get('job').get('mode') == 'IDLE' else True
-		self.target_temp = float(device_state.get('job').get('target-temperature'))
-		self.temp_display_unit = str(device_state.get('job').get('temperature-unit'))
+		self.cook_time = int(self.device_state.get('job').get('cook-time-seconds'))
+		self.cook = False if self.device_state.get('job').get('mode') == 'IDLE' else True
+		self.target_temp = float(self.device_state.get('job').get('target-temperature'))
+		self.temp_display_unit = str(self.device_state.get('job').get('temperature-unit'))
 
-		self.job_status = str(device_state.get('job-status').get('state'))
-		self.job_time_remaining = int(device_state.get('job-status').get('cook-time-remaining'))
+		self.job_status = str(self.device_state.get('job-status').get('state'))
+		self.job_time_remaining = int(self.device_state.get('job-status').get('cook-time-remaining'))
 
-		self.heater_duty_cycle = float(device_state.get('heater-control').get('duty-cycle'))
-		self.motor_duty_cycle = float(device_state.get('motor-control').get('duty-cycle'))
+		self.heater_duty_cycle = float(self.device_state.get('heater-control').get('duty-cycle')) if self.device_state.get('heater-control') else None
+		self.motor_duty_cycle = float(self.device_state.get('motor-control').get('duty-cycle')) if self.device_state.get('motor-control') else None
 
-		self.wifi_connected = True if device_state.get('network-info').get('connection-status') == 'connected-station' else False
-		self.wifi_ssid = str(device_state.get('network-info').get('ssid'))
+		self.wifi_connected = True if self.device_state.get('network-info').get('connection-status') == 'connected-station' else False
+		self.wifi_ssid = str(self.device_state.get('network-info').get('ssid'))
 
-		self.device_safe = bool(device_state.get('pin-info').get('device-safe'))
-		self.water_leak = bool(device_state.get('pin-info').get('water-leak'))
-		self.water_level_critical = bool(device_state.get('pin-info').get('water-level-critical'))
-		self.water_level_low = bool(device_state.get('pin-info').get('water-level-low'))
+		self.device_safe = bool(self.device_state.get('pin-info').get('device-safe'))
+		self.water_leak = bool(self.device_state.get('pin-info').get('water-leak'))
+		self.water_level_critical = bool(self.device_state.get('pin-info').get('water-level-critical'))
+		self.water_level_low = bool(self.device_state.get('pin-info').get('water-level-low'))
 
-		self.heater_temp = float(device_state.get('temperature-info').get('heater-temperature'))
-		self.triac_temp = float(device_state.get('temperature-info').get('triac-temperature'))
-		self.water_temp = float(device_state.get('temperature-info').get('water-temperature'))
+		self.heater_temp = float(self.device_state.get('temperature-info').get('heater-temperature'))
+		self.triac_temp = float(self.device_state.get('temperature-info').get('triac-temperature'))
+		self.water_temp = float(self.device_state.get('temperature-info').get('water-temperature'))
 
 
 	def __get_raw_state(self):
