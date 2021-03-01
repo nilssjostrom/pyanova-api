@@ -1,3 +1,13 @@
+# all merit goes to: 
+ https://github.com/ammarzuberi/pyanova-api.git
+ 
+# what did I change?
+float(device_state.get('heater-control').get('duty-cycle')) 
+ failed on my device because:
+ device_state.get('heater-control') regularly returns None >>> None.get() always raises an error.
+Fix:  
+  float(device_state.get('heater-control').get('duty-cycle'))  if device_state.get('heater-control') else None
+ 
 # pyanova-api
 A Python 3 library for programmatically accessing WiFi-enabled Anova sous vide cookers through the Anova API.
 
