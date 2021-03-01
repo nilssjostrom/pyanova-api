@@ -21,7 +21,7 @@ A Python 3 library for programmatically accessing WiFi-enabled Anova sous vide c
 
 ### Manual installation
 First, clone the GitHub repository:
-```git clone https://github.com/ammarzuberi/pyanova-api.git```
+```git clone https://github.com/fabriba/pyanova-api.git```
 
 Enter the newly created `pyanova-api` directory and run:
 ```pip install .```
