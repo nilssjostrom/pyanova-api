@@ -51,8 +51,10 @@ class AnovaCooker(object):
 
 	def update_state(self):
 		"""Get the device state and update local variables."""
-		self.raw_device_state = self.__get_raw_state()
-		_timestamp = datetime.datetime.now()
+		self._raw_device_state_json = self.__get_raw_state()
+		self.raw_device_state = self._raw_device_state_json[0].get('body')
+		_timestamp = datetime.datetime.strptime( self._raw_device_state_json[0].get('header').get('created-at'),  '%Y-%m-%dT%H:%M:%S.%fZ')
+		self.updated_at = _timestamp.strftime("%Y-%m-%d %H:%M:%S")
   
 		self.cook_time_seconds = int(self.raw_device_state.get('job').get('cook-time-seconds'))
 		_cook_time_delta = datetime.timedelta(seconds=self.cook_time_seconds )
@@ -65,8 +67,8 @@ class AnovaCooker(object):
 		self.job_seconds_remaining = int(self.raw_device_state.get('job-status').get('cook-time-remaining')) 	# original ammarzuberi way
 		_job_time_remaining_delta = datetime.timedelta(seconds=self.job_seconds_remaining)  				# fabriba human readable way
 		self.job_time_remaining = str(_job_time_remaining_delta )				
-		self.job_end_time = ( _timestamp + _job_time_remaining_delta ).strftime("%Y-%m-%d %H:%M")
-		self.job_start_time = ( _timestamp + _job_time_remaining_delta  - _cook_time_delta ).strftime("%Y-%m-%d %H:%M")
+		self.job_end_time = ( _timestamp + _job_time_remaining_delta ).strftime("%Y-%m-%d %H:%M:%S")
+		self.job_start_time = ( _timestamp + _job_time_remaining_delta  - _cook_time_delta ).strftime("%Y-%m-%d %H:%M:%S")
 
 		self.heater_duty_cycle = float(self.raw_device_state.get('heater-control').get('duty-cycle')) if self.raw_device_state.get('heater-control') else None
 		self.motor_duty_cycle = float(self.raw_device_state.get('motor-control').get('duty-cycle')) if self.raw_device_state.get('motor-control') else None
@@ -89,7 +91,7 @@ class AnovaCooker(object):
 												'cook-start-time': self.job_start_time ,
 												'cook-end-time': self.job_end_time },
 								'job-status': {	'cook-time-remaining': self.job_time_remaining ,
-												'status-updated-at': _timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+												'status-updated-at': self.updated_at,
 												'state': self.raw_device_state.get('job-status').get('state'),
 												'heater-temperature': self.heater_temp,
 												'water-temperature': self.water_temp ,
@@ -115,7 +117,7 @@ class AnovaCooker(object):
 		if len(device_state_body) == 0:
 			raise Exception('Invalid device ID')
 
-		return device_state_body[0].get('body')
+		return device_state_body
 		
 
 	def authenticate(self, email, password):
