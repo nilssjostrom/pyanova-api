@@ -89,6 +89,7 @@ class AnovaCooker(object):
 												'cook-start-time': self.job_start_time ,
 												'cook-end-time': self.job_end_time },
 								'job-status': {	'cook-time-remaining': self.job_time_remaining ,
+												'status-updated-at': _timestamp.strftime("%Y-%m-%d %H:%M:%S"),
 												'state': self.raw_device_state.get('job-status').get('state'),
 												'heater-temperature': self.heater_temp,
 												'water-temperature': self.water_temp ,
