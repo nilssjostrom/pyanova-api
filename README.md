@@ -9,8 +9,9 @@ float(device_state.get('heater-control').get('duty-cycle'))
 Fix:  
   float(device_state.get('heater-control').get('duty-cycle'))  if device_state.get('heater-control') else None
   
-I had a similar problem with motor-control.
+2. I had a similar problem with motor-control.
 
+3. I made device_state publicly available as in: cooker.device_state (a shorthand to get complete info on state)
 I couldn't find a way to branch this, so I forked it
  
 # pyanova-api
@@ -96,8 +97,8 @@ All the available state variables are:
 | --- | --- | --- |
 | `job_status` | str | The status of the current job, for example, `PREHEATING`. |
 | `job_time_remaining` | int | The number of seconds remaining in the job. |
-| `heater_duty_cycle` | float | The heater's percentage duty cycle. |
-| `motor_duty_cycle` | float | The motor's percentage duty cycle. |
+| `heater_duty_cycle` | float | The heater's percentage duty cycle (or None, if not available). |
+| `motor_duty_cycle` | float | The motor's percentage duty cycle (or None, if not available). |
 | `wifi_connected` | bool | The cooker's WiFi connection status. |
 | `wifi_ssid` | str | The SSID of the network the cooker is connected to. |
 | `device_safe` | bool | Is the device is safe to operate? |
@@ -107,6 +108,8 @@ All the available state variables are:
 | `heater_temp` | float | The heater's temperature in Celcius. |
 | `triac_temp` | float | The triac's (like a relay) temperature in Celcius. |
 | `water_temp` | float | The water's temperature in Celcius. |
+| `device_state` | dict | The complete state of the device, including all info above |
+
 
 These state variables can be accessed like so:
 ```python
