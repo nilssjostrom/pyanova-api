@@ -7,6 +7,8 @@ float(device_state.get('heater-control').get('duty-cycle'))
  device_state.get('heater-control') regularly returns None >>> None.get() always raises an error.
 Fix:  
   float(device_state.get('heater-control').get('duty-cycle'))  if device_state.get('heater-control') else None
+  
+I couldn't find a way to branch this, so I forked it
  
 # pyanova-api
 A Python 3 library for programmatically accessing WiFi-enabled Anova sous vide cookers through the Anova API.
