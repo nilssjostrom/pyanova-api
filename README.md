@@ -2,6 +2,8 @@
  https://github.com/ammarzuberi/pyanova-api.git
  
 # what did I change?
+I am not much of a git expert, so I couldn't find a way to branch ammarzuberi's code and I forked it, but the only changes I made were:
+
 1. heater-control
 float(device_state.get('heater-control').get('duty-cycle')) 
  failed on my device because:
@@ -12,7 +14,6 @@ Fix:
 2. I had a similar problem with motor-control.
 
 3. I made device_state publicly available as in: cooker.device_state (a shorthand to get complete info on state)
-I couldn't find a way to branch this, so I forked it
  
 # pyanova-api
 A Python 3 library for programmatically accessing WiFi-enabled Anova sous vide cookers through the Anova API.
