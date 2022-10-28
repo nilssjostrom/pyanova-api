@@ -1,5 +1,10 @@
+I hit some problems with newer cookers, and since the pyanova-api in PyPi isn't maintained I couldn't go straight with the
+https://github.com/fabriba/pyanova-api  or https://github.com/mpsamuels/anova_control way.
+I use AppDeamon add-on in Home assistant so I can import a modified anova_control.py instead.
+Helpers in Home assistant needs to be created according to entities used by anova.py. 
+The result looks like this
 ![image](https://user-images.githubusercontent.com/97192090/198689987-3aee5f1c-c007-4478-a07a-7df4c4039c53.png)
-
+Note:Cooling is not a built-in feature in the cooker, it's a magnet valve for flushing water into a surrounding container controlled by a Shelly1.
 
 
 # all merit goes to: 
