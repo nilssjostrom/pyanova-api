@@ -1,0 +1,20 @@
+---
+hello_world:
+  module: hello
+  class: HelloWorld
+anova:       #any name you like.
+  module: anova         #that was the name we used for our py file
+  class: AnovaControl   #and this was the name from our class
+  triggerID: input_boolean.test
+  entities:
+    - sensor.job_time
+    - sensor.authenticated
+    - sensor.water_temp
+    - sensor.target_temp
+    - sensor.water_low
+    - input_number.set_anova_target
+    - input_number.set_anova_time
+    - input_button.anova_start
+    - input_button.anova_stop
+    - input.boolean.anova_cooking
+    
